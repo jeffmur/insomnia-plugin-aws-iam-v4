@@ -1,11 +1,11 @@
 {
-  "name": "insomnia-plugin-aws-v4-iam",
+  "name": "insomnia-plugin-aws-iam-v4",
   "version": "1.0.0",
   "description": "An Insomnia plugin to retrieve aws credentials from file for use with IAM authentication",
   "main": "index.js",
-  "repository": "https://github.com/jeffmur/insomnia-plugin-aws-v4-iam",
+  "repository": "https://github.com/jeffmur/insomnia-plugin-aws-iam-v4",
   "insomnia": {
-    "name": "aws-v4-iam"
+    "name": "aws-iam-v4"
   },
   "scripts": {
     "tsc": "tsc"

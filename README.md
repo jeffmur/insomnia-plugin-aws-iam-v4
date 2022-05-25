@@ -13,7 +13,7 @@ cd ~/Library/Application Support/Insomnia/plugins
 ```
 2. Install the plugin in previous step's directory
 ```
-npm i insomnia-plugin-aws-v4-iam
+npm i insomnia-plugin-aws-iam-v4
 ```
 3. In Insomnia toggle `Reload Plugins` via Tools -> Reload Plugins
 4. For an API call, choose Authentication -> AWS
