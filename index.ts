@@ -1,13 +1,4 @@
-import { promisify } from 'util';
-const awscred = require('awscred');
-
-const loadAwsCred = promisify(awscred.load);
-
-enum Attribute {
-    accessKeyId = 'accessKeyId',
-    secretAccessKey = 'secretAccessKey',
-    sessionToken = 'sessionToken'
-}
+import {Attribute, loadCachedCredentialsFromProfile} from "./helper";
 
 export const templateTags = [
     {
@@ -36,10 +27,15 @@ export const templateTags = [
             description: 'Profile name',
             type: 'string',
             defaultValue: 'default'
+        },{
+            displayName: 'Region',
+            description: 'Region name',
+            type: 'string',
+            defaultValue: 'us-west-2'
         }],
-        async run(context: object, attribute: Attribute, profile: String) {
-            const loadedCredentialObject = await loadAwsCred({'profile' : profile});
-            return loadedCredentialObject.credentials[attribute];
+        async run(context: object, attribute: Attribute, profile: String, region: String) {
+            const loadedCredentialObject = await loadCachedCredentialsFromProfile(profile, region);
+            return loadedCredentialObject[attribute];
         },
     }
 ];
