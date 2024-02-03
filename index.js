@@ -1,15 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.templateTags = void 0;
-const util_1 = require("util");
-const awscred = require('awscred');
-const loadAwsCred = util_1.promisify(awscred.load);
-var Attribute;
-(function (Attribute) {
-    Attribute["accessKeyId"] = "accessKeyId";
-    Attribute["secretAccessKey"] = "secretAccessKey";
-    Attribute["sessionToken"] = "sessionToken";
-})(Attribute || (Attribute = {}));
+const helper_1 = require("./helper");
 exports.templateTags = [
     {
         name: 'awsiam',
@@ -20,16 +11,16 @@ exports.templateTags = [
                 type: 'enum',
                 options: [
                     {
-                        displayName: Attribute.accessKeyId,
-                        value: Attribute.accessKeyId,
+                        displayName: helper_1.Attribute.accessKeyId,
+                        value: helper_1.Attribute.accessKeyId,
                     },
                     {
-                        displayName: Attribute.secretAccessKey,
-                        value: Attribute.secretAccessKey,
+                        displayName: helper_1.Attribute.secretAccessKey,
+                        value: helper_1.Attribute.secretAccessKey,
                     },
                     {
-                        displayName: Attribute.sessionToken,
-                        value: Attribute.sessionToken,
+                        displayName: helper_1.Attribute.sessionToken,
+                        value: helper_1.Attribute.sessionToken,
                     },
                 ]
             }, {
@@ -37,10 +28,15 @@ exports.templateTags = [
                 description: 'Profile name',
                 type: 'string',
                 defaultValue: 'default'
+            }, {
+                displayName: 'Region',
+                description: 'Region name',
+                type: 'string',
+                defaultValue: 'us-west-2'
             }],
-        async run(context, attribute, profile) {
-            const loadedCredentialObject = await loadAwsCred({ 'profile': profile });
-            return loadedCredentialObject.credentials[attribute];
+        async run(context, attribute, profile, region) {
+            const loadedCredentialObject = await helper_1.loadCachedCredentialsFromProfile(profile, region);
+            return loadedCredentialObject[attribute];
         },
     }
 ];
