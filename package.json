@@ -1,6 +1,6 @@
 {
   "name": "insomnia-plugin-aws-iam-v4",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "An Insomnia plugin to retrieve aws credentials from file for use with IAM authentication",
   "main": "index.js",
   "repository": "https://github.com/jeffmur/insomnia-plugin-aws-iam-v4",
@@ -13,16 +13,16 @@
   "keywords": [
     "insomnia",
     "aws",
-    "iam"
+    "profile",
+    "sts"
   ],
   "author": "Jeffrey Murray",
   "license": "MIT",
   "dependencies": {
-    "awscred": "^1.5.0"
+    "@aws-sdk/credential-providers": "^3.521.0"
   },
   "devDependencies": {
     "@types/node": "^12.12.50",
     "typescript": "^3.7.4"
   }
 }
-

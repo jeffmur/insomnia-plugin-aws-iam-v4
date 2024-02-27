@@ -1,7 +1,40 @@
-import { promisify } from 'util';
-const awscred = require('awscred');
+// import { fromIni } from "@aws-sdk/credential-providers"; // ES6 import
+const { fromIni } = require("@aws-sdk/credential-providers"); // CommonJS import
 
-const loadAwsCred = promisify(awscred.load);
+var hourlyCachedCreds = new Map();
+
+async function loadCredentialsFromProfile(profileName:String) {
+    const credentialsProvider = fromIni({
+        /**
+         * Optional. The configuration profile to use. If not specified, the provider will use the value
+         * in the `AWS_PROFILE` environment variable or a default of `default`.
+         */
+        profile: profileName,
+        /**
+         * Optional. The path to the shared credentials file. If not specified, the provider will use
+         * the value in the `AWS_SHARED_CREDENTIALS_FILE` environment variable or a default of `~/.aws/credentials`.
+         */
+        // filepath: "~/.aws/credentials",
+        /**
+         * Optional. The path to the shared config file. If not specified, the provider will use the
+         * value in the `AWS_CONFIG_FILE` environment variable or a default of `~/.aws/config`.
+         */
+        // configFilepath: "~/.aws/config",
+        /**
+         * Optional. A function that returns a a promise fulfilled with an MFA token code for the
+         * provided MFA Serial code. If a profile requires an MFA code and `mfaCodeProvider` is not a
+         * valid function, the credential provider promise will be rejected.
+         */
+        // mfaCodeProvider: async (mfaSerial) => {
+        //   return "token";
+        // },
+        /**
+         * Optional. Custom STS client configurations overriding the default ones.
+         */
+        // clientConfig: { region },
+    });
+    return credentialsProvider();
+}
 
 enum Attribute {
     accessKeyId = 'accessKeyId',
@@ -37,9 +70,16 @@ export const templateTags = [
             type: 'string',
             defaultValue: 'default'
         }],
-        async run(context: object, attribute: Attribute, profile: String) {
-            const loadedCredentialObject = await loadAwsCred({'profile' : profile});
-            return loadedCredentialObject.credentials[attribute];
-        },
+        async run(context: object, attribute: Attribute, profileName: String) {
+            let currentHour = new Date().getHours();
+            // Cache Lasts 1 hour
+            const cacheKey = `${profileName}-${currentHour}`.toLowerCase();
+            // Create a new cache entry
+            if (hourlyCachedCreds.get(cacheKey) === undefined) {
+                const creds = await loadCredentialsFromProfile(profileName);
+                hourlyCachedCreds.set(cacheKey, creds);
+            }
+            return hourlyCachedCreds.get(cacheKey)[attribute];
+        }
     }
 ];
