@@ -69,6 +69,11 @@ exports.templateTags = [
                 description: 'Profile name',
                 type: 'string',
                 defaultValue: 'default'
+            }, {
+                displayName: 'Region',
+                description: 'Region name',
+                type: 'string',
+                defaultValue: 'us-west-2'
             }],
         async run(context, attribute, profileName) {
             let currentHour = new Date().getHours();
